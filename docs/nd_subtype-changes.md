@@ -52,42 +52,86 @@ if ($sp_code_val === '' && !empty($job_nezam_nr)) {
 
 ---
 
-## ۲. بخش save — ذخیره کد در samen_personell
+## ۲. بخش save — ذخیره در **هر دو** جدول
 
 **فایل:** `personell_register.php`
 
-**قبل از** `$personell_obj->setDataArray($_POST);` (هم در update و هم insert):
+تخصص باید همزمان در `samen_senddocters` و `samen_personell` ذخیره شود. ترتیب مهم است:
+
+1. اول `samen_senddocters` (با **نام** + **کد**)
+2. بعد `samen_personell` (فقط **کد** در فیلد `nd_subtype`)
+
+### ۲-الف. samen_senddocters — همان بلوک اول save (دست نزنید، فقط مطمئن شوید هست)
+
+این بلوک **قبل از** validation و **قبل از** `setDataArray` اجرا می‌شود. باید بماند:
 
 ```php
-// کد تخصص را در nd_subtype ذخیره کن، نه نام نمایشی
-if (!empty($_POST['nd_subtype_code'])) {
-    $_POST['nd_subtype'] = $_POST['nd_subtype_code'];
-} elseif ($update || $personell_nr) {
-    // اگر کاربر تخصص را عوض نکرد، مقدار قبلی DB را نگه دار
-    $old_nd = $personell_obj->personell_data['nd_subtype'] ?? '';
-    if (!empty($old_nd)) {
-        $_POST['nd_subtype'] = $old_nd;
+if ($mode == 'save') {
+    // ...
+    $job_nezam_nr    = isset($_POST['job_nezam_nr']) ? trim($_POST['job_nezam_nr']) : '';
+    $nd_subtype_code = isset($_POST['nd_subtype_code']) ? $_POST['nd_subtype_code'] : '';
+    $nd_subtype_name = isset($_POST['nd_subtype']) ? trim($_POST['nd_subtype']) : '';
+
+    if (!empty($job_nezam_nr)) {
+        $sql_chk = "SELECT nr FROM samen_senddocters 
+                    WHERE nezam_nr='" . addslashes($job_nezam_nr) . "' LIMIT 1";
+        $chk = $db->Execute($sql_chk);
+        // ...
+        if ($chk->RecordCount() > 0) {
+            $sql = "UPDATE samen_senddocters SET
+                name='" . addslashes($name_last) . "',
+                fname='" . addslashes($name_first) . "',
+                subtype='" . addslashes($nd_subtype_name) . "',
+                subtype_nr='" . addslashes($nd_subtype_code) . "',
+                sepas_code='" . addslashes($nd_subtype_code) . "',
+                modify_id='" . $user . "',
+                modify_time='" . $now . "'
+                WHERE nezam_nr='" . addslashes($job_nezam_nr) . "'";
+        } else {
+            $sql = "INSERT INTO samen_senddocters
+                (nezam_nr, name, fname, subtype, subtype_nr, sepas_code, create_id, create_time)
+                VALUES (..., '" . addslashes($nd_subtype_name) . "', '" . addslashes($nd_subtype_code) . "', ...)";
+        }
+        $db->Execute($sql);
     }
 }
-unset($_POST['nd_subtype_code']); // فیلد DB نیست
 ```
 
-برای update، `$personell_obj->loadPersonellData` قبلاً اجرا شده؛ اگر نه، قبل از save یک بار load کنید یا مقدار را از query بگیرید:
+| جدول | فیلد | مقدار |
+|------|------|-------|
+| `samen_senddocters` | `subtype` | نام تخصص (متن input) |
+| `samen_senddocters` | `subtype_nr` | کد (`nd_subtype_code`) |
+| `samen_senddocters` | `sepas_code` | کد (`nd_subtype_code`) |
+
+### ۲-ب. samen_personell — قبل از setDataArray
+
+**بعد از** بلوک senddocters و **قبل از** `$personell_obj->setDataArray($_POST);` (هم update هم insert):
 
 ```php
-$old_nd_subtype = '';
-if ($personell_nr) {
+// نام نمایشی را نگه دار (senddocters قبلاً با همین ذخیره شده)
+$nd_subtype_name = isset($_POST['nd_subtype']) ? trim($_POST['nd_subtype']) : '';
+$nd_subtype_code = isset($_POST['nd_subtype_code']) ? trim($_POST['nd_subtype_code']) : '';
+
+// کد را در samen_personell.nd_subtype ذخیره کن
+if ($nd_subtype_code !== '') {
+    $_POST['nd_subtype'] = $nd_subtype_code;
+} elseif ($personell_nr) {
+    // کاربر تخصص را عوض نکرد → مقدار قبلی personell را نگه دار
     $sql_old = "SELECT nd_subtype FROM samen_personell WHERE nr=" . (int)$personell_nr . " LIMIT 1";
     $rs_old = $db->Execute($sql_old);
-    if ($rs_old && $rs_old->RecordCount()) {
-        $old_nd_subtype = $rs_old->fields['nd_subtype'];
+    if ($rs_old && $rs_old->RecordCount() && $rs_old->fields['nd_subtype'] !== '') {
+        $_POST['nd_subtype'] = $rs_old->fields['nd_subtype'];
     }
 }
-// ...
-} elseif (!empty($old_nd_subtype)) {
-    $_POST['nd_subtype'] = $old_nd_subtype;
-}
+
+unset($_POST['nd_subtype_code']); // فقط فیلد فرم است، ستون DB نیست
 ```
+
+| جدول | فیلد | مقدار |
+|------|------|-------|
+| `samen_personell` | `nd_subtype` | کد تخصص |
+
+**چرا ترتیب مهم است:** بلوک senddocters از `$_POST['nd_subtype']` به‌عنوان **نام** استفاده می‌کند. اگر قبل از آن `nd_subtype` را به کد تبدیل کنید، نام اشتباه در senddocters ذخیره می‌شود.
 
 ---
 
@@ -159,9 +203,20 @@ if ($show_file || $path == 'mali') {
 
 ## خلاصه جریان
 
+### بارگذاری
+
 | مرحله | منبع | فیلد نمایش | فیلد hidden |
 |--------|------|------------|-------------|
-| بارگذاری | personell.nd_subtype | نام از specialty_data | کد |
-| بارگذاری (خالی) | senddocters | subtype | subtype_nr |
-| انتخاب از لیست | JS | value | code |
-| ذخیره | POST | — | nd_subtype = code |
+| اولویت ۱ | `personell.nd_subtype` (کد) | نام از `specialty_data` | همان کد |
+| اولویت ۲ | `senddocters` | `subtype` | `subtype_nr` |
+| انتخاب از لیست | JS | `value` | `code` |
+
+### ذخیره (هر دو جدول)
+
+| جدول | فیلد | مقدار |
+|------|------|-------|
+| `samen_senddocters` | `subtype` | نام (`nd_subtype` از فرم) |
+| `samen_senddocters` | `subtype_nr` / `sepas_code` | کد (`nd_subtype_code`) |
+| `samen_personell` | `nd_subtype` | کد (`nd_subtype_code`) |
+
+شرط senddocters: `job_nezam_nr` خالی نباشد.

@@ -396,6 +396,7 @@
             <li><a href="#utilities">حذف استایل اینلاین با Utility</a></li>
             <li><a href="#classes">کلاس‌های پرکاربرد بوت‌استرپ</a></li>
             <li><a href="#notyf">Notyf به جای alert</a></li>
+            <li><a href="#loader">لودر سراسری (showLoader)</a></li>
             <li><a href="#example">یک مثال کامل قدم‌به‌قدم</a></li>
             <li><a href="#checklist">چک‌لیست نهایی</a></li>
         </ol>
@@ -838,9 +839,108 @@ notyf.error(<span class="tok-str">'خطا در ارتباط'</span>);</code></pr
             </div>
         </section>
 
-        <!-- ============ 8. EXAMPLE ============ -->
+        <!-- ============ 8. LOADER ============ -->
+        <section id="loader">
+            <h2><span class="num">۸</span> لودر سراسری — <span dir="ltr">showLoader()</span> / <span dir="ltr">hideLoader()</span></h2>
+            <p class="section-lead">یک «لودینگ» یکدست برای کل پروژه که موقع جستجو یا ارسال فرم نشان داده می‌شود — کاملاً با کلاس‌های بوت‌استرپ.</p>
+
+            <p><b>لودر چیست و چرا؟</b> به جای این‌که هر صفحه برای خودش یک <code>&lt;div id="loader-overlay" style="..."&gt;</code> با کلی استایل اینلاین بسازد (مثل کد قدیمی)، یک تابع <b>سراسری</b> داریم که یک‌بار نوشته می‌شود و همه‌جا در دسترس است. این یعنی لودینگِ همه‌ی صفحات یک شکل و یکدست است.</p>
+
+            <h3 class="sub">کد سراسری (در فایل JS مشترک قرار می‌گیرد)</h3>
+            <p>این سه تابع در فایل JS عمومیِ پروژه (همان فایلی که Notyf هم آنجا تنظیم می‌شود) نوشته می‌شوند و <b>روی همه‌ی صفحات</b> اجرا می‌شوند. لازم نیست در هر صفحه دوباره بنویسی‌شان.</p>
+            <pre><code><span class="tok-com">// ساخت overlay فقط یک‌بار (اگر قبلاً ساخته شده، دوباره نساز)</span>
+<span class="tok-kw">function</span> <span class="tok-attr">buildLoaderOverlay</span>() {
+  <span class="tok-kw">if</span> (document.getElementById(<span class="tok-str">'loader-overlay'</span>)) <span class="tok-kw">return</span>;
+  <span class="tok-kw">var</span> el = document.createElement(<span class="tok-str">'div'</span>);
+  el.id = <span class="tok-str">'loader-overlay'</span>;
+  <span class="tok-com">// تمام چینش و موقعیت با کلاس‌های بوت‌استرپ:</span>
+  el.className = <span class="tok-str">'position-fixed top-0 start-0 w-100 h-100 d-none '</span> +
+                <span class="tok-str">'align-items-center justify-content-center loader-blur'</span>;
+  el.innerHTML =
+    <span class="tok-str">'&lt;div class="d-flex flex-column align-items-center gap-3"&gt;'</span> +
+    <span class="tok-str">'&lt;div class="d-flex gap-2"&gt;'</span> +
+    <span class="tok-str">'&lt;div class="spinner-grow spinner-grow-sm text-primary" role="status" style="animation-delay:0s"&gt;...&lt;/div&gt;'</span> +
+    <span class="tok-str">'&lt;div class="spinner-grow spinner-grow-sm text-primary" role="status" style="animation-delay:.2s"&gt;...&lt;/div&gt;'</span> +
+    <span class="tok-str">'&lt;div class="spinner-grow spinner-grow-sm text-primary" role="status" style="animation-delay:.4s"&gt;...&lt;/div&gt;'</span> +
+    <span class="tok-str">'&lt;/div&gt;'</span> +
+    <span class="tok-str">'&lt;div class="fw-bold text-primary"&gt;در حال بارگذاری ...&lt;/div&gt;'</span> +
+    <span class="tok-str">'&lt;/div&gt;'</span>;
+  document.body.appendChild(el);
+}
+
+<span class="tok-com">// نمایش لودر</span>
+<span class="tok-kw">function</span> <span class="tok-attr">showLoader</span>() {
+  buildLoaderOverlay();
+  <span class="tok-kw">var</span> el = document.getElementById(<span class="tok-str">'loader-overlay'</span>);
+  el.classList.remove(<span class="tok-str">'d-none'</span>);
+  el.classList.add(<span class="tok-str">'d-flex'</span>);
+}
+
+<span class="tok-com">// پنهان‌کردن لودر</span>
+<span class="tok-kw">function</span> <span class="tok-attr">hideLoader</span>() {
+  <span class="tok-kw">var</span> el = document.getElementById(<span class="tok-str">'loader-overlay'</span>);
+  <span class="tok-kw">if</span> (el) { el.classList.remove(<span class="tok-str">'d-flex'</span>); el.classList.add(<span class="tok-str">'d-none'</span>); }
+}</code></pre>
+
+            <div class="note info">
+                <span class="ic">🧩</span>
+                <div>
+                    <b>هر کلاس اینجا یعنی چه؟</b>
+                    <code>position-fixed</code> ثابت روی صفحه، <code>top-0 start-0</code> چسبیده به گوشه، <code>w-100 h-100</code> تمام صفحه، <code>d-flex align-items-center justify-content-center</code> وسط‌چین کردن محتوا، <code>d-none</code> مخفی بودن اولیه، و <code>spinner-grow</code> همان انیمیشن لودینگ آماده‌ی بوت‌استرپ است. می‌بینی که <u>هیچ استایل چیدمانی دستی</u> لازم نشد.
+                </div>
+            </div>
+
+            <h3 class="sub">چطور و کجا استفاده کنیم؟</h3>
+            <p>توابع بالا سراسری‌اند، اما <b>صدا زدنشان</b> در فایل JS مخصوصِ همان صفحه انجام می‌شود. رایج‌ترین جا: داخل تابع <code dir="ltr">validate()</code> فرم، <b>درست قبل از این‌که فرم ارسال شود</b> (یعنی قبل از <code dir="ltr">return true</code>). این‌طوری به‌محض زدن دکمه‌ی جستجو، لودر می‌آید و کاربر می‌فهمد منتظر بماند.</p>
+
+            <pre><code><span class="tok-com">// در فایل JS مخصوص صفحه (مثلاً sandogh_reports_users_ak.js)</span>
+<span class="tok-kw">function</span> <span class="tok-attr">validate</span>(d) {
+  <span class="tok-kw">if</span> (trim(d.fdate.value) == <span class="tok-str">''</span>) {
+    notyf.warning(<span class="tok-str">'لطفا تاريخ اول را مشخص كنيد'</span>);
+    <span class="tok-kw">return</span> <span class="tok-kw">false</span>;
+  }
+  <span class="tok-com">// ... بقیه‌ی اعتبارسنجی‌ها ...</span>
+
+  d.mode.value = <span class="tok-str">'search'</span>;
+  showLoader();      <span class="tok-com">// &lt;-- اینجا، بعد از این‌که همه‌چیز اوکی بود</span>
+  <span class="tok-kw">return</span> <span class="tok-kw">true</span>;   <span class="tok-com">// حالا فرم ارسال می‌شود و لودر روی صفحه دیده می‌شود</span>
+}</code></pre>
+
+            <p>و در خود فرم PHP، تابع از طریق <code dir="ltr">onSubmit</code> صدا زده می‌شود (این فراخوانیِ کوتاهِ <code dir="ltr">return validate(this)</code> اشکالی ندارد چون فقط یک «اتصال» است، نه منطق):</p>
+            <pre><code><span class="tok-tag">&lt;form</span> <span class="tok-attr">method</span>=<span class="tok-str">"post"</span> <span class="tok-attr">onSubmit</span>=<span class="tok-str">"return validate(this);"</span><span class="tok-tag">&gt;</span></code></pre>
+
+            <div class="tbl-wrap">
+                <table class="grid">
+                    <thead><tr><th>کِی صدا بزنیم؟</th><th>کدام تابع</th><th>مثال</th></tr></thead>
+                    <tbody>
+                        <tr><td>قبل از ارسال فرم / شروع جستجو</td><td><code dir="ltr">showLoader()</code></td><td>داخل <code dir="ltr">validate()</code> قبل از <code dir="ltr">return true</code></td></tr>
+                        <tr><td>قبل از یک درخواست AJAX</td><td><code dir="ltr">showLoader()</code></td><td>ابتدای <code dir="ltr">$.ajax({ beforeSend... })</code></td></tr>
+                        <tr><td>بعد از اتمام AJAX (موفق یا ناموفق)</td><td><code dir="ltr">hideLoader()</code></td><td>در <code dir="ltr">complete</code> یا <code dir="ltr">.always()</code></td></tr>
+                        <tr><td>عملیات سنگین سمت کلاینت</td><td>هر دو</td><td><code dir="ltr">showLoader()</code> ... کار ... <code dir="ltr">hideLoader()</code></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="note warn">
+                <span class="ic">⚠️</span>
+                <div>
+                    <b>دو نکته‌ی استثنا:</b>
+                    <ul>
+                        <li>کلاس <code>loader-blur</code> (برای محو/تار شدن پس‌زمینه) جزو بوت‌استرپ نیست؛ چون لودر <u>سراسری</u> است، این کلاس یک‌بار به‌صورت مشترک تعریف می‌شود — این تنها حالت قابل‌قبولِ کلاس مشترکِ غیربوت‌استرپ است.</li>
+                        <li><code dir="ltr">style="animation-delay:.2s"</code> روی اسپینرها یک استثنای کوچک و قابل‌قبول است، چون مقدار زمان‌بندیِ انیمیشن معادل کلاس بوت‌استرپ ندارد. به‌جز همین موارد ریزِ پویا، استایل اینلاین ممنوع است.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="note danger">
+                <span class="ic">🚫</span>
+                <div>دیگر <b>هیچ‌وقت</b> لودر را دستی با <code>&lt;div id="loader-overlay" style="position:fixed;inset:0;..."&gt;</code> در PHP نساز (مثل کد قدیمی). فقط <code dir="ltr">showLoader()</code> را صدا بزن.</div>
+            </div>
+        </section>
+
+        <!-- ============ 9. EXAMPLE ============ -->
         <section id="example">
-            <h2><span class="num">۸</span> یک مثال کامل قدم‌به‌قدم</h2>
+            <h2><span class="num">۹</span> یک مثال کامل قدم‌به‌قدم</h2>
             <p class="section-lead">تبدیل یک قطعه‌ی واقعی از حالت قدیمی به بوت‌استرپ.</p>
 
             <div class="ba">
@@ -876,9 +976,9 @@ notyf.error(<span class="tok-str">'خطا در ارتباط'</span>);</code></pr
             <p>چه چیزهایی عوض شد؟ <code>x_panel→card</code>، <code>x_title→card-header</code>، استایل اینلاینِ فاصله و فلکس ← <code>card-body d-flex gap-2</code>، <code>form-input→form-control</code>، <code dir="ltr">onclick</code> و <code dir="ltr">alert</code> ← منطق در فایل JS مجزا با <code dir="ltr">notyf</code>.</p>
         </section>
 
-        <!-- ============ 9. CHECKLIST ============ -->
+        <!-- ============ 10. CHECKLIST ============ -->
         <section id="checklist">
-            <h2><span class="num">۹</span> چک‌لیست نهایی</h2>
+            <h2><span class="num">۱۰</span> چک‌لیست نهایی</h2>
             <p class="section-lead">قبل از این‌که بگویی «صفحه آماده است»، این لیست را تیک بزن.</p>
             <ul class="checklist">
                 <li>هیچ <code dir="ltr">style="..."</code> اینلاینی در صفحه نمانده باشد.</li>
@@ -889,6 +989,7 @@ notyf.error(<span class="tok-str">'خطا در ارتباط'</span>);</code></pr
                 <li>جدول‌ها داخل <code>table-responsive</code> با کلاس‌های <code>table</code> باشند.</li>
                 <li>تمام کد JS در فایل JS مخصوص همان صفحه باشد، نه اینلاین.</li>
                 <li>هیچ <code dir="ltr">alert()</code> نمانده؛ همه با <code dir="ltr">notyf.*</code> جایگزین شده.</li>
+                <li>لودر دستی (<code>div#loader-overlay</code> اینلاین) حذف شده و فقط <code dir="ltr">showLoader()</code> صدا زده می‌شود.</li>
                 <li>در <code>bootstrap-custom.css</code> کلاس سفارشی جدیدی اضافه نشده باشد.</li>
                 <li>استایل مخصوص همین صفحه (اگر لازم بود) فقط داخل <code>&lt;style&gt;</code> همان فایل باشد.</li>
                 <li>صفحه راست‌چین (RTL) و در موبایل هم درست نمایش داده شود.</li>

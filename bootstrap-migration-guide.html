@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>راهنمای مهاجرت به بوت‌استرپ | استاندارد کدنویسی پروژه</title>
+
+    <!-- فونت فارسی -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #0f172a;
+            --bg-soft: #1e293b;
+            --surface: #ffffff;
+            --surface-2: #f8fafc;
+            --border: #e2e8f0;
+            --text: #1e293b;
+            --text-soft: #64748b;
+            --primary: #2563eb;
+            --primary-soft: #dbeafe;
+            --success: #16a34a;
+            --success-soft: #dcfce7;
+            --danger: #dc2626;
+            --danger-soft: #fee2e2;
+            --warning: #d97706;
+            --warning-soft: #fef3c7;
+            --info: #0891b2;
+            --info-soft: #cffafe;
+            --purple: #7c3aed;
+            --purple-soft: #ede9fe;
+            --radius: 14px;
+            --shadow: 0 1px 3px rgba(15,23,42,.08), 0 8px 24px -12px rgba(15,23,42,.18);
+            --code-bg: #0f172a;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Vazirmatn', 'Segoe UI', Tahoma, sans-serif;
+            background: linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%);
+            color: var(--text);
+            line-height: 2;
+            font-size: 16px;
+        }
+
+        a { color: var(--primary); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        /* ---------- Layout ---------- */
+        .layout {
+            max-width: 1180px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 28px;
+            padding: 28px 20px 80px;
+        }
+
+        /* ---------- Hero ---------- */
+        .hero {
+            background: radial-gradient(1200px 400px at 100% -20%, #3b82f6 0%, transparent 60%),
+                        linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+            color: #fff;
+            padding: 56px 24px;
+            text-align: center;
+        }
+        .hero h1 {
+            margin: 0 0 12px;
+            font-size: 2.3rem;
+            font-weight: 800;
+            letter-spacing: -.5px;
+        }
+        .hero p {
+            margin: 0 auto;
+            max-width: 680px;
+            opacity: .85;
+            font-size: 1.05rem;
+        }
+        .hero .badge-row {
+            margin-top: 22px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .hero .pill {
+            background: rgba(255,255,255,.12);
+            border: 1px solid rgba(255,255,255,.22);
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: .85rem;
+            backdrop-filter: blur(6px);
+        }
+
+        /* ---------- Sidebar / TOC ---------- */
+        .toc {
+            position: sticky;
+            top: 24px;
+            align-self: start;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px;
+            box-shadow: var(--shadow);
+            max-height: calc(100vh - 48px);
+            overflow-y: auto;
+        }
+        .toc h3 {
+            margin: 0 0 12px;
+            font-size: .9rem;
+            color: var(--text-soft);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .toc ol {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            counter-reset: toc;
+        }
+        .toc li { margin: 2px 0; }
+        .toc a {
+            display: block;
+            padding: 8px 12px;
+            border-radius: 9px;
+            color: var(--text);
+            font-size: .92rem;
+            transition: .15s;
+            counter-increment: toc;
+        }
+        .toc a::before {
+            content: counter(toc);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            margin-left: 8px;
+            border-radius: 6px;
+            background: var(--primary-soft);
+            color: var(--primary);
+            font-size: .75rem;
+            font-weight: 700;
+        }
+        .toc a:hover {
+            background: var(--surface-2);
+            text-decoration: none;
+        }
+
+        /* ---------- Content ---------- */
+        .content { min-width: 0; }
+
+        section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px 30px;
+            margin-bottom: 26px;
+            box-shadow: var(--shadow);
+            scroll-margin-top: 20px;
+        }
+
+        section > h2 {
+            margin: 0 0 6px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        section > h2 .num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            background: var(--primary);
+            color: #fff;
+            border-radius: 11px;
+            font-size: 1.05rem;
+            flex: 0 0 auto;
+        }
+        .section-lead {
+            color: var(--text-soft);
+            margin: 0 0 22px;
+            padding-right: 50px;
+        }
+
+        h3.sub {
+            margin: 26px 0 12px;
+            font-size: 1.12rem;
+            font-weight: 700;
+            border-right: 4px solid var(--primary);
+            padding-right: 12px;
+        }
+
+        p { margin: 12px 0; }
+
+        /* ---------- Callouts ---------- */
+        .note {
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin: 18px 0;
+            border: 1px solid;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            font-size: .95rem;
+        }
+        .note .ic { font-size: 1.2rem; line-height: 1.9; flex: 0 0 auto; }
+        .note.tip { background: var(--success-soft); border-color: #86efac; color: #14532d; }
+        .note.warn { background: var(--warning-soft); border-color: #fcd34d; color: #713f12; }
+        .note.danger { background: var(--danger-soft); border-color: #fca5a5; color: #7f1d1d; }
+        .note.info { background: var(--info-soft); border-color: #67e8f9; color: #155e75; }
+        .note b { font-weight: 800; }
+
+        /* ---------- Code ---------- */
+        pre {
+            background: var(--code-bg);
+            color: #e2e8f0;
+            border-radius: 12px;
+            padding: 16px 18px;
+            overflow-x: auto;
+            direction: ltr;
+            text-align: left;
+            font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+            font-size: .85rem;
+            line-height: 1.7;
+            margin: 14px 0;
+            border: 1px solid #1e293b;
+        }
+        code {
+            font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            padding: 1px 7px;
+            border-radius: 6px;
+            font-size: .85em;
+            color: var(--danger);
+            direction: ltr;
+            display: inline-block;
+        }
+        pre code {
+            background: none; border: none; padding: 0; color: inherit; font-size: 1em;
+        }
+        .tok-tag { color: #f472b6; }
+        .tok-attr { color: #93c5fd; }
+        .tok-str { color: #86efac; }
+        .tok-com { color: #64748b; font-style: italic; }
+        .tok-kw { color: #c4b5fd; }
+
+        /* ---------- Before / After ---------- */
+        .ba {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 18px 0;
+        }
+        .ba .col h4 {
+            margin: 0 0 8px;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+        }
+        .ba .old h4 { color: var(--danger); }
+        .ba .new h4 { color: var(--success); }
+        .tag {
+            font-size: .7rem;
+            padding: 2px 9px;
+            border-radius: 999px;
+            font-weight: 700;
+        }
+        .tag.old { background: var(--danger-soft); color: var(--danger); }
+        .tag.new { background: var(--success-soft); color: var(--success); }
+
+        /* ---------- Tables ---------- */
+        .tbl-wrap { overflow-x: auto; margin: 16px 0; border-radius: 12px; border: 1px solid var(--border); }
+        table.grid {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .9rem;
+            min-width: 520px;
+        }
+        table.grid th, table.grid td {
+            padding: 11px 14px;
+            text-align: right;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        table.grid thead th {
+            background: var(--surface-2);
+            font-weight: 700;
+            color: var(--text);
+            position: sticky;
+            top: 0;
+        }
+        table.grid tbody tr:last-child td { border-bottom: none; }
+        table.grid tr:hover td { background: #f8fafc; }
+        table.grid code { white-space: nowrap; }
+        .x { color: var(--danger); font-weight: 800; }
+        .ok { color: var(--success); font-weight: 800; }
+
+        /* ---------- Notyf demo chips ---------- */
+        .notyf-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+            margin: 18px 0;
+        }
+        .notyf-card {
+            border-radius: 12px;
+            padding: 16px;
+            color: #fff;
+            box-shadow: var(--shadow);
+        }
+        .notyf-card h4 { margin: 0 0 4px; font-size: 1rem; }
+        .notyf-card code { background: rgba(0,0,0,.2); border: none; color: #fff; }
+        .notyf-card p { margin: 6px 0 0; font-size: .85rem; opacity: .92; }
+        .nf-success { background: #27ae60; }
+        .nf-error { background: #e74c3c; }
+        .nf-warning { background: #f39c12; }
+        .nf-info { background: #2980b9; }
+        .nf-confirm { background: #8e44ad; }
+
+        /* ---------- Checklist ---------- */
+        .checklist { list-style: none; margin: 8px 0; padding: 0; }
+        .checklist li {
+            padding: 12px 16px 12px 16px;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        .checklist li::before {
+            content: "✓";
+            color: var(--success);
+            font-weight: 900;
+            font-size: 1.05rem;
+            flex: 0 0 auto;
+        }
+
+        kbd {
+            background: var(--bg-soft);
+            color: #fff;
+            border-radius: 6px;
+            padding: 2px 8px;
+            font-size: .8rem;
+            font-family: inherit;
+        }
+
+        footer {
+            text-align: center;
+            color: var(--text-soft);
+            padding: 30px 20px 50px;
+            font-size: .9rem;
+        }
+
+        @media (max-width: 920px) {
+            .layout { grid-template-columns: 1fr; }
+            .toc { position: static; max-height: none; }
+            .ba { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="hero">
+    <h1>راهنمای مهاجرت به بوت‌استرپ</h1>
+    <p>استاندارد یکنواخت کدنویسی برای مدرن‌سازی صفحات قدیمی پروژه — تبدیل ساختارهای قدیمی (<span dir="ltr">x_panel</span>، استایل اینلاین، کلاس‌های سفارشی) به ساختار تمیز و یکدست بوت‌استرپ ۵.</p>
+    <div class="badge-row">
+        <span class="pill">Bootstrap 5.3 RTL</span>
+        <span class="pill">بدون استایل اینلاین</span>
+        <span class="pill">Notyf به جای alert</span>
+        <span class="pill">JS در فایل مجزا</span>
+    </div>
+</header>
+
+<div class="layout">
+
+    <!-- ============ TOC ============ -->
+    <nav class="toc">
+        <h3>فهرست مطالب</h3>
+        <ol>
+            <li><a href="#why">چرا و فلسفه‌ی کار</a></li>
+            <li><a href="#mapping">جدول معادل‌ها (قدیمی ← جدید)</a></li>
+            <li><a href="#structure">جدول ساختار صفحه</a></li>
+            <li><a href="#rules">قوانین طلایی (حتماً بخوان)</a></li>
+            <li><a href="#utilities">حذف استایل اینلاین با Utility</a></li>
+            <li><a href="#classes">کلاس‌های پرکاربرد بوت‌استرپ</a></li>
+            <li><a href="#notyf">Notyf به جای alert</a></li>
+            <li><a href="#loader">لودر سراسری (showLoader)</a></li>
+            <li><a href="#example">یک مثال کامل قدم‌به‌قدم</a></li>
+            <li><a href="#checklist">چک‌لیست نهایی</a></li>
+        </ol>
+    </nav>
+
+    <main class="content">
+
+        <!-- ============ 1. WHY ============ -->
+        <section id="why">
+            <h2><span class="num">۱</span> چرا و فلسفه‌ی کار</h2>
+            <p class="section-lead">قبل از این‌که یک خط کد عوض کنی، باید بدونی چرا داریم این کار رو می‌کنیم.</p>
+
+            <p>اکثر فایل‌های پروژه‌ی ما <b>قدیمی</b> هستند؛ یعنی با ساختارهای دستی مثل <code>x_panel</code>، <code>x_title</code>، کلاس‌های سفارشیِ پراکنده و کلی <b>استایل اینلاین</b> (مثل <code dir="ltr">style="margin:16px"</code>) نوشته شده‌اند. این روش سه مشکل بزرگ دارد:</p>
+
+            <div class="note danger">
+                <span class="ic">⚠️</span>
+                <div>
+                    <b>مشکلِ کد قدیمی:</b> هر صفحه ظاهر و ساختار متفاوتی دارد، نگه‌داری سخت است، ریسپانسیو نیست، و وقتی یک رنگ یا فاصله را عوض می‌کنی باید ده‌ها جا را دستی پیدا کنی.
+                </div>
+            </div>
+
+            <p>هدف ما این است که همه‌ی صفحات به یک <b>ساختار یکنواخت مبتنی بر بوت‌استرپ ۵</b> برسند تا:</p>
+            <ul>
+                <li>همه‌ی صفحات شبیه هم و حرفه‌ای به نظر برسند (یکدستی بصری).</li>
+                <li>کد کوتاه‌تر، تمیزتر و قابل‌فهم برای همه‌ی اعضای تیم باشد.</li>
+                <li>به‌صورت خودکار ریسپانسیو و راست‌چین (RTL) باشد.</li>
+                <li>تغییرات سراسری از یک نقطه (فایل کاستوم بوت‌استرپ) مدیریت شود.</li>
+            </ul>
+
+            <div class="note tip">
+                <span class="ic">🎯</span>
+                <div><b>قانون کلی:</b> تا جای ممکن <u>همه چیز</u> باید با <b>کلاس‌های آماده‌ی بوت‌استرپ</b> انجام شود. استایل دستی و اینلاین آخرین راه‌حل است، نه اولین.</div>
+            </div>
+        </section>
+
+        <!-- ============ 2. MAPPING ============ -->
+        <section id="mapping">
+            <h2><span class="num">۲</span> جدول معادل‌ها (قدیمی ← جدید)</h2>
+            <p class="section-lead">این جدول قلب راهنماست: وقتی کد قدیمی را دیدی، چه چیزی را با چه چیزی عوض کن.</p>
+
+            <div class="tbl-wrap">
+                <table class="grid">
+                    <thead>
+                        <tr>
+                            <th>کد قدیمی <span class="tag old">حذف شود</span></th>
+                            <th>جایگزین بوت‌استرپ <span class="tag new">به‌جایش</span></th>
+                            <th>توضیح</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>&lt;div class="page-wrap"&gt;</code></td>
+                            <td><code>&lt;div class="container-fluid"&gt;</code> یا <code>container</code></td>
+                            <td>قاب اصلی صفحه. <code>container-fluid</code> تمام عرض، <code>container</code> عرض محدود.</td>
+                        </tr>
+                        <tr>
+                            <td><code>&lt;div class="x_panel"&gt;</code></td>
+                            <td><code>&lt;div class="card"&gt;</code></td>
+                            <td>هر «جعبه» محتوا یک کارت می‌شود.</td>
+                        </tr>
+                        <tr>
+                            <td><code>&lt;div class="x_title"&gt;</code></td>
+                            <td><code>card-header</code> یا <code>border-bottom</code> + هدینگ</td>
+                            <td>عنوان بالای کارت.</td>
+                        </tr>
+                        <tr>
+                            <td>محتوای داخل پنل</td>
+                            <td><code>&lt;div class="card-body"&gt;</code></td>
+                            <td>بدنه‌ی کارت.</td>
+                        </tr>
+                        <tr>
+                            <td><code>.search-card</code> / <code>.form-section</code></td>
+                            <td><code>card</code> + <code>card-body</code></td>
+                            <td>هر بخش فرم یک کارت تو در تو.</td>
+                        </tr>
+                        <tr>
+                            <td><code>.search-row</code> (فلکس دستی)</td>
+                            <td><code>row g-2</code> + <code>col-auto</code></td>
+                            <td>سیستم گرید بوت‌استرپ برای چینش فیلدها.</td>
+                        </tr>
+                        <tr>
+                            <td><code>.search-field</code></td>
+                            <td><code>col-auto</code> یا <code>col-md-3</code></td>
+                            <td>هر فیلد یک ستون.</td>
+                        </tr>
+                        <tr>
+                            <td><code>&lt;input class="form-input"&gt;</code></td>
+                            <td><code>&lt;input class="form-control form-control-sm"&gt;</code></td>
+                            <td>تمام input/textarea/select.</td>
+                        </tr>
+                        <tr>
+                            <td>چک‌باکس/رادیو دستی با <code>&lt;label&gt;</code></td>
+                            <td><code>&lt;div class="form-check"&gt;</code> + <code>form-check-input</code> + <code>form-check-label</code></td>
+                            <td>ساختار استاندارد چک‌باکس و رادیو.</td>
+                        </tr>
+                        <tr>
+                            <td><code>.btn.btn-primary</code> سفارشی</td>
+                            <td><code>btn btn-primary</code> (خودِ بوت‌استرپ)</td>
+                            <td>دکمه‌ها؛ فقط کلاس بوت‌استرپ.</td>
+                        </tr>
+                        <tr>
+                            <td><code>.modern-table</code> / <code>.table-wrapper</code></td>
+                            <td><code>table table-bordered table-hover</code> داخل <code>table-responsive</code></td>
+                            <td>جدول‌ها کاملاً استاندارد می‌شوند.</td>
+                        </tr>
+                        <tr>
+                            <td><code>.total-row</code></td>
+                            <td><code>table-info fw-bold</code></td>
+                            <td>ردیف جمع کل.</td>
+                        </tr>
+                        <tr>
+                            <td><code>.alert-info</code> سفارشی</td>
+                            <td><code>alert alert-info</code></td>
+                            <td>جعبه‌ی پیام.</td>
+                        </tr>
+                        <tr>
+                            <td><code dir="ltr">alert('...')</code></td>
+                            <td><code dir="ltr">notyf.warning('...')</code></td>
+                            <td>پیام‌های جاوااسکریپت (بخش ۷ را ببین).</td>
+                        </tr>
+                        <tr>
+                            <td><code>newstyle.css</code></td>
+                            <td><code>bootstrap.rtl.min.css</code> + <code>bootstrap-custom.css</code></td>
+                            <td>منبع استایل عوض می‌شود.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ============ 3. STRUCTURE ============ -->
+        <section id="structure">
+            <h2><span class="num">۳</span> اسکلت استاندارد یک صفحه</h2>
+            <p class="section-lead">هر صفحه‌ی جدید باید دقیقاً از این ترتیب پیروی کند تا یکدست بمانیم.</p>
+
+            <h3 class="sub">بخش <span dir="ltr">&lt;head&gt;</span> — منابع</h3>
+            <pre><code><span class="tok-com">&lt;!-- ۱) همیشه بوت‌استرپ RTL اول --&gt;</span>
+<span class="tok-tag">&lt;link</span> <span class="tok-attr">rel</span>=<span class="tok-str">"stylesheet"</span> <span class="tok-attr">href</span>=<span class="tok-str">"&lt;?php echo $root_path; ?&gt;css/bootstrap-5.3.8/css/bootstrap.rtl.min.css"</span><span class="tok-tag">&gt;</span>
+<span class="tok-com">&lt;!-- ۲) فایل کاستوم مشترک پروژه --&gt;</span>
+<span class="tok-tag">&lt;link</span> <span class="tok-attr">rel</span>=<span class="tok-str">"stylesheet"</span> <span class="tok-attr">href</span>=<span class="tok-str">"&lt;?php echo $root_path; ?&gt;css/bootstrap-custom.css"</span><span class="tok-tag">&gt;</span>
+<span class="tok-com">&lt;!-- ۳) در پایان صفحه: باندل JS بوت‌استرپ --&gt;</span>
+<span class="tok-tag">&lt;script</span> <span class="tok-attr">src</span>=<span class="tok-str">"&lt;?php echo $root_path; ?&gt;css/bootstrap-5.3.8/js/bootstrap.bundle.min.js"</span><span class="tok-tag">&gt;&lt;/script&gt;</span>
+<span class="tok-com">&lt;!-- ۴) فایل JS مخصوص همین صفحه --&gt;</span>
+<span class="tok-tag">&lt;script</span> <span class="tok-attr">src</span>=<span class="tok-str">"&lt;?php echo $root_path; ?&gt;modules/.../js/page_name.js"</span><span class="tok-tag">&gt;&lt;/script&gt;</span></code></pre>
+
+            <h3 class="sub">بدنه‌ی صفحه — قالب کلی</h3>
+            <pre><code><span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"container-fluid mt-3"</span><span class="tok-tag">&gt;</span>
+
+  <span class="tok-com">&lt;!-- عنوان صفحه --&gt;</span>
+  <span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"border-bottom border-2 p-1 mb-2 d-flex align-items-center"</span><span class="tok-tag">&gt;</span>
+    <span class="tok-tag">&lt;h2</span> <span class="tok-attr">class</span>=<span class="tok-str">"h6 m-0 text-primary"</span><span class="tok-tag">&gt;</span>عنوان<span class="tok-tag">&lt;/h2&gt;</span>
+  <span class="tok-tag">&lt;/div&gt;</span>
+
+  <span class="tok-com">&lt;!-- کارت محتوا --&gt;</span>
+  <span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"card mb-3"</span><span class="tok-tag">&gt;</span>
+    <span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"card-body"</span><span class="tok-tag">&gt;</span>
+      ... فرم یا جدول ...
+    <span class="tok-tag">&lt;/div&gt;</span>
+  <span class="tok-tag">&lt;/div&gt;</span>
+
+<span class="tok-tag">&lt;/div&gt;</span></code></pre>
+        </section>
+
+        <!-- ============ 4. RULES ============ -->
+        <section id="rules">
+            <h2><span class="num">۴</span> قوانین طلایی (حتماً بخوان)</h2>
+            <p class="section-lead">این پنج قانون غیرقابل‌مذاکره‌اند. رعایت‌نکردنشان یعنی به‌هم‌ریختن یکدستی پروژه.</p>
+
+            <h3 class="sub">قانون ۱ — جاوااسکریپت همیشه در فایل JS مخصوص همان صفحه</h3>
+            <p>هیچ کد جاوااسکریپتی نباید به‌صورت اینلاین (<code dir="ltr">onclick="..."</code> یا تگ <code>&lt;script&gt;</code> پر از منطق) داخل فایل PHP نوشته شود. هر صفحه فایل JS خودش را دارد (که ممکن است متفاوت باشد) و همه‌ی منطق آنجا می‌رود.</p>
+            <div class="ba">
+                <div class="col old">
+                    <h4><span class="tag old">قدیمی</span> داخل PHP</h4>
+                    <pre><code><span class="tok-tag">&lt;script&gt;</span>
+  <span class="tok-kw">function</span> <span class="tok-attr">selectAll</span>() { ... }
+<span class="tok-tag">&lt;/script&gt;</span></code></pre>
+                </div>
+                <div class="col new">
+                    <h4><span class="tag new">جدید</span> داخل page_name.js</h4>
+                    <pre><code><span class="tok-com">// modules/.../js/page_name.js</span>
+<span class="tok-kw">function</span> <span class="tok-attr">selectAll</span>() { ... }</code></pre>
+                </div>
+            </div>
+
+            <h3 class="sub">قانون ۲ — هیچ استایل اینلاینی نزن</h3>
+            <p>نوشتن <code dir="ltr">style="..."</code> روی تگ‌ها <b>ممنوع</b> است. به جایش از کلاس‌های Utility بوت‌استرپ استفاده کن (بخش ۵). اگر واقعاً چیزی بود که بوت‌استرپ نداشت، آن را در <code>&lt;style&gt;</code> همان صفحه بنویس.</p>
+            <div class="note danger">
+                <span class="ic">🚫</span>
+                <div><b>ممنوع:</b> <code dir="ltr">&lt;div style="margin-top:12px;font-size:24px"&gt;</code> &nbsp;←&nbsp; <b>درست:</b> <code dir="ltr">&lt;div class="mt-3 fs-3"&gt;</code></div>
+            </div>
+
+            <h3 class="sub">قانون ۳ — به فایل <span dir="ltr">bootstrap-custom.css</span> دست نزن (مگر برای override بوت‌استرپ)</h3>
+            <p>فایل کاستوم بوت‌استرپ <b>فقط</b> برای override یا تنظیم رفتار <u>کلاس‌های خودِ بوت‌استرپ</u> است. به‌هیچ‌وجه کلاس سفارشی جدید (مثل <code>.my-box</code>) آنجا تعریف <b>نکن</b>؛ این کار ساختار یکنواخت را خراب می‌کند.</p>
+            <div class="note warn">
+                <span class="ic">📌</span>
+                <div>
+                    <b>کجا چه چیزی بنویسم؟</b>
+                    <ul>
+                        <li>استایلِ مخصوص فقط یک صفحه ← داخل تگ <code>&lt;style&gt;</code> همان فایل.</li>
+                        <li>چیزی که واقعاً مهم و سراسری است و باید رفتار یک کلاس بوت‌استرپ را عوض کند ← <code>bootstrap-custom.css</code>.</li>
+                        <li>کلاس سفارشی کاملاً جدید ← <span class="x">اصلاً نزن</span>، با کلاس‌های آماده حلش کن.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 class="sub">قانون ۴ — اول کلاس آماده، بعد استایل دستی</h3>
+            <p>قبل از این‌که هر استایلی بنویسی، اول مطمئن شو بوت‌استرپ یک کلاس آماده برایش ندارد. ۹۰٪ کارها (فاصله، رنگ، فلکس، گرید، سایه، حاشیه) کلاس آماده دارند.</p>
+
+            <h3 class="sub">قانون ۵ — به جای <span dir="ltr">alert()</span> از Notyf استفاده کن</h3>
+            <p>تمام پیام‌های <code dir="ltr">alert()</code> و <code dir="ltr">confirm()</code> باید با Notyf جایگزین شوند (بخش ۷).</p>
+        </section>
+
+        <!-- ============ 5. UTILITIES ============ -->
+        <section id="utilities">
+            <h2><span class="num">۵</span> حذف استایل اینلاین با کلاس‌های Utility</h2>
+            <p class="section-lead">به جای نوشتن <code dir="ltr">font-size</code>، <code dir="ltr">margin</code>، <code dir="ltr">padding</code> و... به‌صورت دستی، از این معادل‌ها استفاده کن.</p>
+
+            <h3 class="sub">فاصله‌ها — margin و padding</h3>
+            <p>الگو: <code>{property}{sides}-{size}</code>. مقادیر اندازه از <kbd>0</kbd> تا <kbd>5</kbd> (و <kbd>auto</kbd>) هستند. مقیاس: <code>1=4px</code>، <code>2=8px</code>، <code>3=16px</code>، <code>4=24px</code>، <code>5=48px</code>.</p>
+            <div class="tbl-wrap">
+                <table class="grid">
+                    <thead>
+                        <tr><th>استایل دستی</th><th>معادل بوت‌استرپ</th><th>چند نمونه‌ی دیگر</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code dir="ltr">margin-top:16px</code></td><td><code>mt-3</code></td><td><code>mt-1</code> .. <code>mt-5</code></td></tr>
+                        <tr><td><code dir="ltr">margin-bottom:24px</code></td><td><code>mb-4</code></td><td><code>mb-0</code>، <code>mb-2</code></td></tr>
+                        <tr><td><code dir="ltr">margin: 0 auto</code></td><td><code>mx-auto</code></td><td><code>ms-auto</code> (راست‌چین: چپ)</td></tr>
+                        <tr><td><code dir="ltr">padding:16px</code></td><td><code>p-3</code></td><td><code>p-0</code> .. <code>p-5</code></td></tr>
+                        <tr><td><code dir="ltr">padding: 0 8px</code></td><td><code>px-2</code></td><td><code>py-2</code> (بالا/پایین)</td></tr>
+                        <tr><td>فاصله‌ی بین آیتم‌های فلکس/گرید</td><td><code>gap-2</code></td><td><code>g-2</code> داخل <code>row</code></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="note info">
+                <span class="ic">🧭</span>
+                <div>در RTL: <code>ms-*</code> یعنی margin سمت «شروع» (راست) و <code>me-*</code> یعنی سمت «پایان» (چپ). به جای <code>ml/mr</code> از <code>ms/me</code> استفاده کن تا راست‌چین درست بماند.</div>
+            </div>
+
+            <h3 class="sub">اندازه‌ی فونت و وزن</h3>
+            <div class="tbl-wrap">
+                <table class="grid">
+                    <thead>
+                        <tr><th>استایل دستی</th><th>معادل بوت‌استرپ</th><th>توضیح</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code dir="ltr">font-size:40px</code></td><td><code>fs-1</code></td><td>بزرگ‌ترین</td></tr>
+                        <tr><td><code dir="ltr">font-size:24px</code></td><td><code>fs-3</code></td><td>عنوان متوسط</td></tr>
+                        <tr><td><code dir="ltr">font-size:16px</code></td><td><code>fs-6</code></td><td>متن معمولی</td></tr>
+                        <tr><td><code dir="ltr">font-size:13px (کوچک)</code></td><td><code>small</code> یا <code>fs-6</code></td><td>متن ریز</td></tr>
+                        <tr><td><code dir="ltr">font-weight:bold</code></td><td><code>fw-bold</code></td><td><code>fw-bolder</code>، <code>fw-semibold</code></td></tr>
+                        <tr><td><code dir="ltr">font-weight:normal</code></td><td><code>fw-normal</code></td><td><code>fw-light</code></td></tr>
+                        <tr><td><code dir="ltr">font-style:italic</code></td><td><code>fst-italic</code></td><td>—</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="sub">رنگ متن و پس‌زمینه</h3>
+            <div class="tbl-wrap">
+                <table class="grid">
+                    <thead><tr><th>استایل دستی</th><th>معادل بوت‌استرپ</th></tr></thead>
+                    <tbody>
+                        <tr><td><code dir="ltr">color:#cc0000</code> (قرمز)</td><td><code>text-danger</code></td></tr>
+                        <tr><td><code dir="ltr">color:#2563eb</code> (آبی)</td><td><code>text-primary</code></td></tr>
+                        <tr><td><code dir="ltr">color:#888</code> (خاکستری)</td><td><code>text-muted</code></td></tr>
+                        <tr><td><code dir="ltr">color:green</code></td><td><code>text-success</code></td></tr>
+                        <tr><td><code dir="ltr">background:#f8f9fa</code></td><td><code>bg-light</code></td></tr>
+                        <tr><td><code dir="ltr">background:#e8f4fd</code> (تاکید)</td><td><code>bg-info-subtle</code> / <code>table-info</code></td></tr>
+                        <tr><td><code dir="ltr">text-align:center</code></td><td><code>text-center</code></td></tr>
+                        <tr><td><code dir="ltr">text-align:right</code></td><td><code>text-end</code></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="sub">چیدمان (Flex) و نمایش</h3>
+            <div class="tbl-wrap">
+                <table class="grid">
+                    <thead><tr><th>استایل دستی</th><th>معادل بوت‌استرپ</th></tr></thead>
+                    <tbody>
+                        <tr><td><code dir="ltr">display:flex</code></td><td><code>d-flex</code></td></tr>
+                        <tr><td><code dir="ltr">display:none</code></td><td><code>d-none</code></td></tr>
+                        <tr><td><code dir="ltr">flex-wrap:wrap</code></td><td><code>flex-wrap</code></td></tr>
+                        <tr><td><code dir="ltr">align-items:center</code></td><td><code>align-items-center</code></td></tr>
+                        <tr><td><code dir="ltr">justify-content:flex-end</code></td><td><code>justify-content-end</code></td></tr>
+                        <tr><td><code dir="ltr">justify-content:space-between</code></td><td><code>justify-content-between</code></td></tr>
+                        <tr><td><code dir="ltr">gap:10px</code></td><td><code>gap-2</code></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="sub">حاشیه، گردی و سایه</h3>
+            <div class="tbl-wrap">
+                <table class="grid">
+                    <thead><tr><th>استایل دستی</th><th>معادل بوت‌استرپ</th></tr></thead>
+                    <tbody>
+                        <tr><td><code dir="ltr">border:1px solid #ddd</code></td><td><code>border</code></td></tr>
+                        <tr><td><code dir="ltr">border-top:1px solid</code></td><td><code>border-top</code></td></tr>
+                        <tr><td><code dir="ltr">border-radius:8px</code></td><td><code>rounded</code> / <code>rounded-3</code></td></tr>
+                        <tr><td><code dir="ltr">box-shadow:...</code></td><td><code>shadow-sm</code> / <code>shadow</code></td></tr>
+                        <tr><td><code dir="ltr">width:100%</code></td><td><code>w-100</code></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="note tip">
+                <span class="ic">💡</span>
+                <div><b>نکته‌ی مهم:</b> برای یک کار معمولاً چند معادل وجود دارد. مثلاً «فاصله‌ی بالا» را هم می‌توان با <code>mt-3</code> داد و هم اگر فاصله‌ی استانداردِ بین کارت‌ها بود با <code>mb-3</code> روی عنصر بالایی. مهم این است که <u>هیچ‌وقت عدد خام در <code>style</code> ننویسی</u>.</div>
+            </div>
+        </section>
+
+        <!-- ============ 6. CLASSES ============ -->
+        <section id="classes">
+            <h2><span class="num">۶</span> کلاس‌های پرکاربرد بوت‌استرپ (مرجع سریع)</h2>
+            <p class="section-lead">این‌ها قطعاتی هستند که بارها در صفحات تکرار می‌شوند. حفظشان کن.</p>
+
+            <h3 class="sub">Card — جعبه‌ی محتوا</h3>
+            <pre><code><span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"card mb-3"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"card-header fw-bold text-primary"</span><span class="tok-tag">&gt;</span>عنوان کارت<span class="tok-tag">&lt;/div&gt;</span>
+  <span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"card-body"</span><span class="tok-tag">&gt;</span>محتوا<span class="tok-tag">&lt;/div&gt;</span>
+<span class="tok-tag">&lt;/div&gt;</span></code></pre>
+
+            <h3 class="sub">Grid — سیستم ستون‌بندی (۱۲ ستونه)</h3>
+            <pre><code><span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"row g-2"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"col-md-4"</span><span class="tok-tag">&gt;</span>یک‌سوم<span class="tok-tag">&lt;/div&gt;</span>
+  <span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"col-md-4"</span><span class="tok-tag">&gt;</span>یک‌سوم<span class="tok-tag">&lt;/div&gt;</span>
+  <span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"col-auto"</span><span class="tok-tag">&gt;</span>به‌اندازه‌ی محتوا<span class="tok-tag">&lt;/div&gt;</span>
+<span class="tok-tag">&lt;/div&gt;</span></code></pre>
+
+            <h3 class="sub">Form — فرم و فیلدها</h3>
+            <pre><code><span class="tok-tag">&lt;label</span> <span class="tok-attr">class</span>=<span class="tok-str">"form-label"</span><span class="tok-tag">&gt;</span>نام<span class="tok-tag">&lt;/label&gt;</span>
+<span class="tok-tag">&lt;input</span> <span class="tok-attr">class</span>=<span class="tok-str">"form-control form-control-sm"</span><span class="tok-tag">&gt;</span>
+
+<span class="tok-com">&lt;!-- چک‌باکس / رادیو --&gt;</span>
+<span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"form-check"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;input</span> <span class="tok-attr">class</span>=<span class="tok-str">"form-check-input"</span> <span class="tok-attr">type</span>=<span class="tok-str">"checkbox"</span> <span class="tok-attr">id</span>=<span class="tok-str">"c1"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;label</span> <span class="tok-attr">class</span>=<span class="tok-str">"form-check-label"</span> <span class="tok-attr">for</span>=<span class="tok-str">"c1"</span><span class="tok-tag">&gt;</span>گزینه<span class="tok-tag">&lt;/label&gt;</span>
+<span class="tok-tag">&lt;/div&gt;</span></code></pre>
+
+            <h3 class="sub">Table — جدول</h3>
+            <pre><code><span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"table-responsive"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;table</span> <span class="tok-attr">class</span>=<span class="tok-str">"table table-bordered table-hover align-middle text-center"</span><span class="tok-tag">&gt;</span>
+    <span class="tok-tag">&lt;thead&gt;</span>...<span class="tok-tag">&lt;/thead&gt;&lt;tbody&gt;</span>...<span class="tok-tag">&lt;/tbody&gt;</span>
+  <span class="tok-tag">&lt;/table&gt;</span>
+<span class="tok-tag">&lt;/div&gt;</span></code></pre>
+
+            <h3 class="sub">دکمه‌ها و پیام‌ها</h3>
+            <div class="tbl-wrap">
+                <table class="grid">
+                    <thead><tr><th>کلاس</th><th>کاربرد</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>btn btn-primary</code></td><td>دکمه‌ی اصلی (آبی)</td></tr>
+                        <tr><td><code>btn btn-secondary</code></td><td>دکمه‌ی فرعی (خاکستری)</td></tr>
+                        <tr><td><code>btn btn-success / btn-danger</code></td><td>تایید / حذف</td></tr>
+                        <tr><td><code>btn btn-sm / btn-lg</code></td><td>کوچک / بزرگ</td></tr>
+                        <tr><td><code>btn btn-link</code></td><td>دکمه‌ای که شبیه لینک است</td></tr>
+                        <tr><td><code>alert alert-info</code></td><td>جعبه‌ی پیام اطلاع‌رسانی</td></tr>
+                        <tr><td><code>badge bg-primary</code></td><td>برچسب کوچک</td></tr>
+                        <tr><td><code>spinner-border</code></td><td>لودینگ</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ============ 7. NOTYF ============ -->
+        <section id="notyf">
+            <h2><span class="num">۷</span> Notyf — جایگزین مدرن <span dir="ltr">alert()</span></h2>
+            <p class="section-lead">دیگر از <code dir="ltr">alert()</code> زشت و مزاحم مرورگر استفاده نکن. Notyf پیام‌های شناور، زیبا و رنگی نشان می‌دهد.</p>
+
+            <p><b>Notyf چیست؟</b> یک کتابخانه‌ی سبک جاوااسکریپت برای نمایش «توست» (پیام شناور گوشه‌ی صفحه). این تنظیمات یک‌بار به‌صورت سراسری انجام می‌شود (مثلاً در فایل JS مشترک) و بعد در همه‌ی صفحات در دسترس است:</p>
+
+            <pre><code><span class="tok-attr">document</span>.addEventListener(<span class="tok-str">'DOMContentLoaded'</span>, () =&gt; {
+  <span class="tok-attr">window</span>.notyf = <span class="tok-kw">new</span> Notyf({
+    duration: <span class="tok-str">3000</span>,                         <span class="tok-com">// مدت نمایش (میلی‌ثانیه)</span>
+    position: { x: <span class="tok-str">'right'</span>, y: <span class="tok-str">'top'</span> },    <span class="tok-com">// محل نمایش</span>
+    dismissible: <span class="tok-kw">true</span>,                       <span class="tok-com">// قابل بستن با کلیک</span>
+    ripple: <span class="tok-kw">false</span>,
+    types: [
+      { type: <span class="tok-str">'success'</span>, background: <span class="tok-str">'#27ae60'</span>, icon: <span class="tok-kw">false</span> },
+      { type: <span class="tok-str">'error'</span>,   background: <span class="tok-str">'#e74c3c'</span>, icon: <span class="tok-kw">false</span> },
+      { type: <span class="tok-str">'warning'</span>, background: <span class="tok-str">'#f39c12'</span>, icon: <span class="tok-kw">false</span> },
+      { type: <span class="tok-str">'info'</span>,    background: <span class="tok-str">'#2980b9'</span>, icon: <span class="tok-kw">false</span> },
+      { type: <span class="tok-str">'confirm'</span>, background: <span class="tok-str">'#8e44ad'</span>, icon: <span class="tok-kw">false</span> },
+    ]
+  });
+
+  <span class="tok-com">// فعال‌سازی متدهای سفارشی warning / info / confirm</span>
+  [<span class="tok-str">'warning'</span>, <span class="tok-str">'info'</span>, <span class="tok-str">'confirm'</span>].forEach(type =&gt; {
+    notyf[type] = (message) =&gt; notyf.open({ type, message });
+  });
+});</code></pre>
+
+            <h3 class="sub">هر نوع Notyf برای چیست؟</h3>
+            <div class="notyf-grid">
+                <div class="notyf-card nf-success">
+                    <h4>✅ success — سبز</h4>
+                    <code dir="ltr">notyf.success('ذخیره شد')</code>
+                    <p>وقتی عملیاتی <b>با موفقیت</b> انجام شد (ثبت، ویرایش، حذف موفق).</p>
+                </div>
+                <div class="notyf-card nf-error">
+                    <h4>⛔ error — قرمز</h4>
+                    <code dir="ltr">notyf.error('خطا رخ داد')</code>
+                    <p>وقتی <b>خطایی</b> پیش آمد. جایگزین اصلی <code dir="ltr">alert</code>های خطا.</p>
+                </div>
+                <div class="notyf-card nf-warning">
+                    <h4>⚠️ warning — نارنجی</h4>
+                    <code dir="ltr">notyf.warning('دقت کن')</code>
+                    <p>برای <b>هشدار</b> و یادآوری (مثلاً فیلدی پر نشده، اعتبارسنجی فرم).</p>
+                </div>
+                <div class="notyf-card nf-info">
+                    <h4>ℹ️ info — آبی</h4>
+                    <code dir="ltr">notyf.info('توجه')</code>
+                    <p>برای <b>اطلاع‌رسانی</b> ساده و راهنمایی بدون بار مثبت یا منفی.</p>
+                </div>
+                <div class="notyf-card nf-confirm">
+                    <h4>🟣 confirm — بنفش</h4>
+                    <code dir="ltr">notyf.confirm('در حال انجام')</code>
+                    <p>برای <b>تاییدها</b> و حالت‌های خاص که می‌خواهی متمایز دیده شوند.</p>
+                </div>
+            </div>
+
+            <h3 class="sub">جایگزینی alert با Notyf</h3>
+            <div class="ba">
+                <div class="col old">
+                    <h4><span class="tag old">قدیمی</span></h4>
+                    <pre><code><span class="tok-attr">alert</span>(<span class="tok-str">'تاریخ را وارد کنید'</span>);
+<span class="tok-attr">alert</span>(<span class="tok-str">'با موفقیت ثبت شد'</span>);
+<span class="tok-attr">alert</span>(<span class="tok-str">'خطا در ارتباط'</span>);</code></pre>
+                </div>
+                <div class="col new">
+                    <h4><span class="tag new">جدید</span></h4>
+                    <pre><code>notyf.warning(<span class="tok-str">'تاریخ را وارد کنید'</span>);
+notyf.success(<span class="tok-str">'با موفقیت ثبت شد'</span>);
+notyf.error(<span class="tok-str">'خطا در ارتباط'</span>);</code></pre>
+                </div>
+            </div>
+
+            <div class="note info">
+                <span class="ic">📎</span>
+                <div>یادت باشد فایل‌های CSS و JS خودِ Notyf هم باید در <code>&lt;head&gt;</code> صفحه (یا قالب مشترک) لود شده باشند تا <code dir="ltr">notyf</code> در دسترس باشد.</div>
+            </div>
+        </section>
+
+        <!-- ============ 8. LOADER ============ -->
+        <section id="loader">
+            <h2><span class="num">۸</span> لودر سراسری — <span dir="ltr">showLoader()</span> / <span dir="ltr">hideLoader()</span></h2>
+            <p class="section-lead">یک «لودینگ» یکدست برای کل پروژه که موقع جستجو یا ارسال فرم نشان داده می‌شود — کاملاً با کلاس‌های بوت‌استرپ.</p>
+
+            <p><b>لودر چیست و چرا؟</b> به جای این‌که هر صفحه برای خودش یک <code>&lt;div id="loader-overlay" style="..."&gt;</code> با کلی استایل اینلاین بسازد (مثل کد قدیمی)، یک تابع <b>سراسری</b> داریم که یک‌بار نوشته می‌شود و همه‌جا در دسترس است. این یعنی لودینگِ همه‌ی صفحات یک شکل و یکدست است.</p>
+
+            <h3 class="sub">کد سراسری (در فایل JS مشترک قرار می‌گیرد)</h3>
+            <p>این سه تابع در فایل JS عمومیِ پروژه (همان فایلی که Notyf هم آنجا تنظیم می‌شود) نوشته می‌شوند و <b>روی همه‌ی صفحات</b> اجرا می‌شوند. لازم نیست در هر صفحه دوباره بنویسی‌شان.</p>
+            <pre><code><span class="tok-com">// ساخت overlay فقط یک‌بار (اگر قبلاً ساخته شده، دوباره نساز)</span>
+<span class="tok-kw">function</span> <span class="tok-attr">buildLoaderOverlay</span>() {
+  <span class="tok-kw">if</span> (document.getElementById(<span class="tok-str">'loader-overlay'</span>)) <span class="tok-kw">return</span>;
+  <span class="tok-kw">var</span> el = document.createElement(<span class="tok-str">'div'</span>);
+  el.id = <span class="tok-str">'loader-overlay'</span>;
+  <span class="tok-com">// تمام چینش و موقعیت با کلاس‌های بوت‌استرپ:</span>
+  el.className = <span class="tok-str">'position-fixed top-0 start-0 w-100 h-100 d-none '</span> +
+                <span class="tok-str">'align-items-center justify-content-center loader-blur'</span>;
+  el.innerHTML =
+    <span class="tok-str">'&lt;div class="d-flex flex-column align-items-center gap-3"&gt;'</span> +
+    <span class="tok-str">'&lt;div class="d-flex gap-2"&gt;'</span> +
+    <span class="tok-str">'&lt;div class="spinner-grow spinner-grow-sm text-primary" role="status" style="animation-delay:0s"&gt;...&lt;/div&gt;'</span> +
+    <span class="tok-str">'&lt;div class="spinner-grow spinner-grow-sm text-primary" role="status" style="animation-delay:.2s"&gt;...&lt;/div&gt;'</span> +
+    <span class="tok-str">'&lt;div class="spinner-grow spinner-grow-sm text-primary" role="status" style="animation-delay:.4s"&gt;...&lt;/div&gt;'</span> +
+    <span class="tok-str">'&lt;/div&gt;'</span> +
+    <span class="tok-str">'&lt;div class="fw-bold text-primary"&gt;در حال بارگذاری ...&lt;/div&gt;'</span> +
+    <span class="tok-str">'&lt;/div&gt;'</span>;
+  document.body.appendChild(el);
+}
+
+<span class="tok-com">// نمایش لودر</span>
+<span class="tok-kw">function</span> <span class="tok-attr">showLoader</span>() {
+  buildLoaderOverlay();
+  <span class="tok-kw">var</span> el = document.getElementById(<span class="tok-str">'loader-overlay'</span>);
+  el.classList.remove(<span class="tok-str">'d-none'</span>);
+  el.classList.add(<span class="tok-str">'d-flex'</span>);
+}
+
+<span class="tok-com">// پنهان‌کردن لودر</span>
+<span class="tok-kw">function</span> <span class="tok-attr">hideLoader</span>() {
+  <span class="tok-kw">var</span> el = document.getElementById(<span class="tok-str">'loader-overlay'</span>);
+  <span class="tok-kw">if</span> (el) { el.classList.remove(<span class="tok-str">'d-flex'</span>); el.classList.add(<span class="tok-str">'d-none'</span>); }
+}</code></pre>
+
+            <div class="note info">
+                <span class="ic">🧩</span>
+                <div>
+                    <b>هر کلاس اینجا یعنی چه؟</b>
+                    <code>position-fixed</code> ثابت روی صفحه، <code>top-0 start-0</code> چسبیده به گوشه، <code>w-100 h-100</code> تمام صفحه، <code>d-flex align-items-center justify-content-center</code> وسط‌چین کردن محتوا، <code>d-none</code> مخفی بودن اولیه، و <code>spinner-grow</code> همان انیمیشن لودینگ آماده‌ی بوت‌استرپ است. می‌بینی که <u>هیچ استایل چیدمانی دستی</u> لازم نشد.
+                </div>
+            </div>
+
+            <h3 class="sub">چطور و کجا استفاده کنیم؟</h3>
+            <p>توابع بالا سراسری‌اند، اما <b>صدا زدنشان</b> در فایل JS مخصوصِ همان صفحه انجام می‌شود. رایج‌ترین جا: داخل تابع <code dir="ltr">validate()</code> فرم، <b>درست قبل از این‌که فرم ارسال شود</b> (یعنی قبل از <code dir="ltr">return true</code>). این‌طوری به‌محض زدن دکمه‌ی جستجو، لودر می‌آید و کاربر می‌فهمد منتظر بماند.</p>
+
+            <pre><code><span class="tok-com">// در فایل JS مخصوص صفحه (مثلاً sandogh_reports_users_ak.js)</span>
+<span class="tok-kw">function</span> <span class="tok-attr">validate</span>(d) {
+  <span class="tok-kw">if</span> (trim(d.fdate.value) == <span class="tok-str">''</span>) {
+    notyf.warning(<span class="tok-str">'لطفا تاريخ اول را مشخص كنيد'</span>);
+    <span class="tok-kw">return</span> <span class="tok-kw">false</span>;
+  }
+  <span class="tok-com">// ... بقیه‌ی اعتبارسنجی‌ها ...</span>
+
+  d.mode.value = <span class="tok-str">'search'</span>;
+  showLoader();      <span class="tok-com">// &lt;-- اینجا، بعد از این‌که همه‌چیز اوکی بود</span>
+  <span class="tok-kw">return</span> <span class="tok-kw">true</span>;   <span class="tok-com">// حالا فرم ارسال می‌شود و لودر روی صفحه دیده می‌شود</span>
+}</code></pre>
+
+            <p>و در خود فرم PHP، تابع از طریق <code dir="ltr">onSubmit</code> صدا زده می‌شود (این فراخوانیِ کوتاهِ <code dir="ltr">return validate(this)</code> اشکالی ندارد چون فقط یک «اتصال» است، نه منطق):</p>
+            <pre><code><span class="tok-tag">&lt;form</span> <span class="tok-attr">method</span>=<span class="tok-str">"post"</span> <span class="tok-attr">onSubmit</span>=<span class="tok-str">"return validate(this);"</span><span class="tok-tag">&gt;</span></code></pre>
+
+            <div class="tbl-wrap">
+                <table class="grid">
+                    <thead><tr><th>کِی صدا بزنیم؟</th><th>کدام تابع</th><th>مثال</th></tr></thead>
+                    <tbody>
+                        <tr><td>قبل از ارسال فرم / شروع جستجو</td><td><code dir="ltr">showLoader()</code></td><td>داخل <code dir="ltr">validate()</code> قبل از <code dir="ltr">return true</code></td></tr>
+                        <tr><td>قبل از یک درخواست AJAX</td><td><code dir="ltr">showLoader()</code></td><td>ابتدای <code dir="ltr">$.ajax({ beforeSend... })</code></td></tr>
+                        <tr><td>بعد از اتمام AJAX (موفق یا ناموفق)</td><td><code dir="ltr">hideLoader()</code></td><td>در <code dir="ltr">complete</code> یا <code dir="ltr">.always()</code></td></tr>
+                        <tr><td>عملیات سنگین سمت کلاینت</td><td>هر دو</td><td><code dir="ltr">showLoader()</code> ... کار ... <code dir="ltr">hideLoader()</code></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="note warn">
+                <span class="ic">⚠️</span>
+                <div>
+                    <b>دو نکته‌ی استثنا:</b>
+                    <ul>
+                        <li>کلاس <code>loader-blur</code> (برای محو/تار شدن پس‌زمینه) جزو بوت‌استرپ نیست؛ چون لودر <u>سراسری</u> است، این کلاس یک‌بار به‌صورت مشترک تعریف می‌شود — این تنها حالت قابل‌قبولِ کلاس مشترکِ غیربوت‌استرپ است.</li>
+                        <li><code dir="ltr">style="animation-delay:.2s"</code> روی اسپینرها یک استثنای کوچک و قابل‌قبول است، چون مقدار زمان‌بندیِ انیمیشن معادل کلاس بوت‌استرپ ندارد. به‌جز همین موارد ریزِ پویا، استایل اینلاین ممنوع است.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="note danger">
+                <span class="ic">🚫</span>
+                <div>دیگر <b>هیچ‌وقت</b> لودر را دستی با <code>&lt;div id="loader-overlay" style="position:fixed;inset:0;..."&gt;</code> در PHP نساز (مثل کد قدیمی). فقط <code dir="ltr">showLoader()</code> را صدا بزن.</div>
+            </div>
+        </section>
+
+        <!-- ============ 9. EXAMPLE ============ -->
+        <section id="example">
+            <h2><span class="num">۹</span> یک مثال کامل قدم‌به‌قدم</h2>
+            <p class="section-lead">تبدیل یک قطعه‌ی واقعی از حالت قدیمی به بوت‌استرپ.</p>
+
+            <div class="ba">
+                <div class="col old">
+                    <h4><span class="tag old">قدیمی</span></h4>
+                    <pre><code><span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"x_panel"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"x_title"</span><span class="tok-tag">&gt;</span>
+    <span class="tok-tag">&lt;h2</span> <span class="tok-attr">style</span>=<span class="tok-str">"font-size:18px"</span><span class="tok-tag">&gt;</span>گزارش<span class="tok-tag">&lt;/h2&gt;</span>
+  <span class="tok-tag">&lt;/div&gt;</span>
+  <span class="tok-tag">&lt;div</span> <span class="tok-attr">style</span>=<span class="tok-str">"margin:16px;display:flex"</span><span class="tok-tag">&gt;</span>
+    <span class="tok-tag">&lt;input</span> <span class="tok-attr">class</span>=<span class="tok-str">"form-input"</span><span class="tok-tag">&gt;</span>
+    <span class="tok-tag">&lt;button</span> <span class="tok-attr">onclick</span>=<span class="tok-str">"alert('ok')"</span><span class="tok-tag">&gt;</span>برو<span class="tok-tag">&lt;/button&gt;</span>
+  <span class="tok-tag">&lt;/div&gt;</span>
+<span class="tok-tag">&lt;/div&gt;</span></code></pre>
+                </div>
+                <div class="col new">
+                    <h4><span class="tag new">جدید</span></h4>
+                    <pre><code><span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"card mb-3"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"card-header"</span><span class="tok-tag">&gt;</span>
+    <span class="tok-tag">&lt;h2</span> <span class="tok-attr">class</span>=<span class="tok-str">"h5 m-0"</span><span class="tok-tag">&gt;</span>گزارش<span class="tok-tag">&lt;/h2&gt;</span>
+  <span class="tok-tag">&lt;/div&gt;</span>
+  <span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"card-body d-flex gap-2"</span><span class="tok-tag">&gt;</span>
+    <span class="tok-tag">&lt;input</span> <span class="tok-attr">class</span>=<span class="tok-str">"form-control form-control-sm"</span><span class="tok-tag">&gt;</span>
+    <span class="tok-tag">&lt;button</span> <span class="tok-attr">id</span>=<span class="tok-str">"goBtn"</span> <span class="tok-attr">class</span>=<span class="tok-str">"btn btn-primary"</span><span class="tok-tag">&gt;</span>برو<span class="tok-tag">&lt;/button&gt;</span>
+  <span class="tok-tag">&lt;/div&gt;</span>
+<span class="tok-tag">&lt;/div&gt;</span>
+
+<span class="tok-com">// و در فایل page_name.js :</span>
+<span class="tok-attr">document</span>.getElementById(<span class="tok-str">'goBtn'</span>)
+  .addEventListener(<span class="tok-str">'click'</span>, () =&gt; notyf.success(<span class="tok-str">'ok'</span>));</code></pre>
+                </div>
+            </div>
+            <p>چه چیزهایی عوض شد؟ <code>x_panel→card</code>، <code>x_title→card-header</code>، استایل اینلاینِ فاصله و فلکس ← <code>card-body d-flex gap-2</code>، <code>form-input→form-control</code>، <code dir="ltr">onclick</code> و <code dir="ltr">alert</code> ← منطق در فایل JS مجزا با <code dir="ltr">notyf</code>.</p>
+        </section>
+
+        <!-- ============ 10. CHECKLIST ============ -->
+        <section id="checklist">
+            <h2><span class="num">۱۰</span> چک‌لیست نهایی</h2>
+            <p class="section-lead">قبل از این‌که بگویی «صفحه آماده است»، این لیست را تیک بزن.</p>
+            <ul class="checklist">
+                <li>هیچ <code dir="ltr">style="..."</code> اینلاینی در صفحه نمانده باشد.</li>
+                <li>هیچ کلاس سفارشی قدیمی (<code>x_panel</code>، <code>search-card</code>، <code>modern-table</code> و...) باقی نمانده باشد.</li>
+                <li>قاب اصلی <code>container</code>/<code>container-fluid</code> و هر جعبه یک <code>card</code> باشد.</li>
+                <li>همه‌ی input‌ها <code>form-control</code> و چک‌باکس/رادیوها <code>form-check</code> باشند.</li>
+                <li>چینش فیلدها با <code>row</code> و <code>col-*</code> انجام شده باشد، نه فلکس دستی.</li>
+                <li>جدول‌ها داخل <code>table-responsive</code> با کلاس‌های <code>table</code> باشند.</li>
+                <li>تمام کد JS در فایل JS مخصوص همان صفحه باشد، نه اینلاین.</li>
+                <li>هیچ <code dir="ltr">alert()</code> نمانده؛ همه با <code dir="ltr">notyf.*</code> جایگزین شده.</li>
+                <li>لودر دستی (<code>div#loader-overlay</code> اینلاین) حذف شده و فقط <code dir="ltr">showLoader()</code> صدا زده می‌شود.</li>
+                <li>در <code>bootstrap-custom.css</code> کلاس سفارشی جدیدی اضافه نشده باشد.</li>
+                <li>استایل مخصوص همین صفحه (اگر لازم بود) فقط داخل <code>&lt;style&gt;</code> همان فایل باشد.</li>
+                <li>صفحه راست‌چین (RTL) و در موبایل هم درست نمایش داده شود.</li>
+            </ul>
+            <div class="note tip">
+                <span class="ic">🏁</span>
+                <div><b>قاعده‌ی نهایی:</b> اگر برای کاری وسوسه شدی <code dir="ltr">style</code> بنویسی، اول ۳۰ ثانیه بگرد ببین کلاس بوت‌استرپش چیست. تقریباً همیشه هست.</div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<footer>
+    راهنمای استاندارد کدنویسی پروژه — مدرن‌سازی صفحات با Bootstrap 5 (RTL)
+</footer>
+
+</body>
+</html>
